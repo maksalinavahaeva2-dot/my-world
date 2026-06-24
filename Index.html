@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Мой Мир</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- ЭКРАН ВХОДА -->
+    <div id="login-screen" class="screen">
+        <div class="login-card glass">
+            <h1 class="logo">🌍 Мой Мир</h1>
+            <p class="subtitle">Твой ключ — твоя роль</p>
+            <input type="text" id="login-username" placeholder="Имя" autocomplete="off">
+            <input type="password" id="login-password" placeholder="Пароль">
+            <button id="login-btn" class="btn-glow">Создать профиль</button>
+        </div>
+    </div>
+
+    <!-- ГЛАВНЫЙ ЭКРАН -->
+    <div id="app" class="screen hidden">
+        <!-- Верхняя панель -->
+        <header class="topbar">
+            <div class="topbar-left">🌍 Мой Мир</div>
+            <div class="topbar-right">
+                <span id="current-username" class="username-clickable"></span>
+                <span id="notif-icon" class="icon-bell">🔔<span id="notif-badge" class="badge hidden">0</span></span>
+                <button id="logout-btn" class="btn-icon">🚪</button>
+            </div>
+        </header>
+
+        <!-- Контент -->
+        <main class="main-content">
+            <!-- Лента (TikTok-стиль) -->
+            <section id="tab-feed" class="tab active feed-container"></section>
+
+            <!-- Группы -->
+            <section id="tab-groups" class="tab hidden">
+                <div class="glass">
+                    <button id="create-group-btn" class="btn-glow">Создать группу</button>
+                    <div id="groups-list"></div>
+                </div>
+                <div id="group-view" class="hidden glass"></div>
+            </section>
+
+            <!-- Публикация -->
+            <section id="tab-publish" class="tab hidden">
+                <div class="create-post glass">
+                    <textarea id="post-text" placeholder="Что нового?"></textarea>
+                    <div>
+                        <label class="file-label">📷 Фото<input type="file" id="post-image" accept="image/*" style="display:none"></label>
+                        <label class="file-label">🎬 Видео<input type="file" id="post-video" accept="video/*" style="display:none"></label>
+                    </div>
+                    <button id="publish-btn" class="btn-glow">Опубликовать</button>
+                </div>
+            </section>
+
+            <!-- Чаты -->
+            <section id="tab-messages" class="tab hidden">
+                <div class="messages-layout">
+                    <div id="chats-list" class="glass"></div>
+                    <div id="chat-window" class="glass hidden"></div>
+                </div>
+            </section>
+
+            <!-- Профиль -->
+            <section id="tab-profile" class="tab hidden">
+                <div id="profile-info" class="glass"></div>
+                <div id="profile-posts" class="glass"></div>
+            </section>
+
+            <!-- Уведомления -->
+            <section id="tab-notifications" class="tab hidden">
+                <div id="notifications-list" class="glass"></div>
+            </section>
+
+            <!-- Админ-панель (Создатель) -->
+            <section id="tab-admin" class="tab hidden">
+                <div class="glass">
+                    <h2>Панель Создателя</h2>
+                    <div id="admin-users-list"></div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Нижняя панель -->
+        <nav class="bottom-nav">
+            <button data-tab="feed" class="nav-btn active">🏠</button>
+            <button data-tab="groups" class="nav-btn">👥</button>
+            <button data-tab="publish" class="nav-btn">➕</button>
+            <button data-tab="messages" class="nav-btn">💬</button>
+            <button data-tab="profile" class="nav-btn">👤</button>
+        </nav>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+  </html>
