@@ -21,7 +21,6 @@
 
     <!-- ГЛАВНЫЙ ЭКРАН -->
     <div id="app" class="screen hidden">
-        <!-- Верхняя панель -->
         <header class="topbar">
             <div class="topbar-left">🌍 Мой Мир</div>
             <div class="topbar-right">
@@ -31,12 +30,8 @@
             </div>
         </header>
 
-        <!-- Контент -->
         <main class="main-content">
-            <!-- Лента (TikTok-стиль) -->
             <section id="tab-feed" class="tab active feed-container"></section>
-
-            <!-- Группы -->
             <section id="tab-groups" class="tab hidden">
                 <div class="glass">
                     <button id="create-group-btn" class="btn-glow">Создать группу</button>
@@ -44,8 +39,6 @@
                 </div>
                 <div id="group-view" class="hidden glass"></div>
             </section>
-
-            <!-- Публикация -->
             <section id="tab-publish" class="tab hidden">
                 <div class="create-post glass">
                     <textarea id="post-text" placeholder="Что нового?"></textarea>
@@ -56,27 +49,19 @@
                     <button id="publish-btn" class="btn-glow">Опубликовать</button>
                 </div>
             </section>
-
-            <!-- Чаты -->
             <section id="tab-messages" class="tab hidden">
                 <div class="messages-layout">
                     <div id="chats-list" class="glass"></div>
                     <div id="chat-window" class="glass hidden"></div>
                 </div>
             </section>
-
-            <!-- Профиль -->
             <section id="tab-profile" class="tab hidden">
                 <div id="profile-info" class="glass"></div>
                 <div id="profile-posts" class="glass"></div>
             </section>
-
-            <!-- Уведомления -->
             <section id="tab-notifications" class="tab hidden">
                 <div id="notifications-list" class="glass"></div>
             </section>
-
-            <!-- Админ-панель (Создатель) -->
             <section id="tab-admin" class="tab hidden">
                 <div class="glass">
                     <h2>Панель Создателя</h2>
@@ -85,7 +70,6 @@
             </section>
         </main>
 
-        <!-- Нижняя панель -->
         <nav class="bottom-nav">
             <button data-tab="feed" class="nav-btn active">🏠</button>
             <button data-tab="groups" class="nav-btn">👥</button>
@@ -97,4 +81,4 @@
 
     <script src="script.js"></script>
 </body>
-  </html>
+</html>
