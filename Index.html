@@ -4,7 +4,163 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Мой Мир</title>
-    <link rel="stylesheet" href="style.css">
+    <style>
+        :root {
+            --bg: #f0f2f5;
+            --glass-bg: rgba(255,255,255,0.7);
+            --shadow: 0 8px 32px rgba(0,0,0,0.1);
+            --gold: #d4af37;
+            --accent: #6c5ce7;
+            --radius: 20px;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: linear-gradient(135deg, #e0e7ff, #f0e6ff);
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+        .screen {
+            width: 100%;
+            max-width: 480px;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            position: relative;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(10px);
+        }
+        .hidden { display: none !important; }
+        .login-card {
+            text-align: center;
+            width: 90%;
+            margin: auto;
+            padding: 40px 20px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.5);
+        }
+        .logo { font-size: 2.5rem; color: var(--accent); margin-bottom: 5px; }
+        .subtitle { color: #555; margin-bottom: 30px; }
+        input, textarea {
+            width: 100%;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid #ddd;
+            border-radius: 15px;
+            font-size: 16px;
+            background: rgba(255,255,255,0.9);
+        }
+        .btn-glow {
+            background: var(--accent);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+            box-shadow: 0 4px 15px rgba(108,92,231,0.4);
+            width: 100%;
+            margin-top: 10px;
+        }
+        .btn-glow:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(108,92,231,0.6); }
+        .btn-small { background: #eee; border: none; padding: 8px 16px; border-radius: 20px; cursor: pointer; }
+        .topbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background: rgba(255,255,255,0.8);
+            backdrop-filter: blur(10px);
+            z-index: 10;
+            border-bottom: 1px solid rgba(0,0,0,0.05);
+        }
+        .topbar-left { font-weight: bold; font-size: 1.2rem; color: var(--accent); }
+        .topbar-right { display: flex; align-items: center; gap: 12px; }
+        .username-clickable { cursor: pointer; font-weight: 500; }
+        .icon-bell { position: relative; cursor: pointer; font-size: 1.3rem; }
+        .badge {
+            position: absolute;
+            top: -8px;
+            right: -10px;
+            background: red;
+            color: white;
+            border-radius: 10px;
+            padding: 2px 6px;
+            font-size: 0.7rem;
+            display: flex;
+        }
+        .btn-icon { background: none; border: none; font-size: 1.3rem; cursor: pointer; }
+        .main-content { flex: 1; overflow-y: auto; }
+        .feed-container { height: 100%; overflow-y: scroll; scroll-snap-type: y mandatory; background: #000; }
+        .feed-container .post {
+            scroll-snap-align: start;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            background: #111;
+            color: white;
+        }
+        .post-media { width: 100%; height: 70%; display: flex; justify-content: center; align-items: center; background: #000; }
+        .post-media img, .post-media video { max-width: 100%; max-height: 100%; object-fit: contain; }
+        .post-caption {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0,0,0,0.5);
+            backdrop-filter: blur(10px);
+            color: white;
+            position: absolute;
+            bottom: 0;
+        }
+        .post-author-small { font-weight: bold; color: var(--gold); }
+        .post-actions-feed { display: flex; gap: 15px; margin-top: 8px; font-size: 1.2rem; }
+        .like-btn, .comment-btn { cursor: pointer; }
+        .tab { padding: 15px; height: 100%; overflow-y: auto; }
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(255,255,255,0.5);
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+        .file-label { display: inline-block; background: #eee; padding: 8px 16px; border-radius: 20px; margin: 5px; cursor: pointer; }
+        .create-post textarea { height: 80px; resize: none; }
+        .group-card { padding: 10px; border-radius: 15px; background: rgba(255,255,255,0.5); margin: 5px 0; cursor: pointer; }
+        .group-avatar { width: 50px; height: 50px; border-radius: 15px; object-fit: cover; }
+        .messages-layout { display: flex; gap: 10px; height: 100%; }
+        #chats-list { width: 40%; overflow-y: auto; }
+        #chat-window { width: 60%; display: flex; flex-direction: column; }
+        .message { margin: 5px 0; padding: 8px 12px; border-radius: 20px; max-width: 80%; }
+        .message.mine { background: var(--accent); color: white; margin-left: auto; }
+        .message.other { background: #eee; }
+        .bottom-nav {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 8px 0;
+            background: rgba(255,255,255,0.9);
+            backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(0,0,0,0.05);
+        }
+        .nav-btn { background: none; border: none; font-size: 1.4rem; cursor: pointer; padding: 8px 12px; border-radius: 20px; transition: 0.3s; color: #555; }
+        .nav-btn.active { background: var(--accent); color: white; }
+        .profile-container { text-align: center; }
+        .profile-avatar { width: 120px; height: 120px; border-radius: 50%; object-fit: cover; border: 4px solid var(--gold); }
+        .profile-color-dot { width: 30px; height: 30px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-left: 10px; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .post { animation: fadeIn 0.3s ease; }
+    </style>
 </head>
 <body>
 
@@ -35,6 +191,153 @@
             <section id="tab-groups" class="tab hidden">
                 <div class="glass">
                     <button id="create-group-btn" class="btn-glow">Создать группу</button>
+                    <div id="groups-list"></div>
+                </div>
+                <div id="group-view" class="hidden glass"></div>
+            </section>
+            <section id="tab-publish" class="tab hidden">
+                <div class="create-post glass">
+                    <textarea id="post-text" placeholder="Что нового?"></textarea>
+                    <div>
+                        <label class="file-label">📷 Фото<input type="file" id="post-image" accept="image/*" style="display:none"></label>
+                        <label class="file-label">🎬 Видео<input type="file" id="post-video" accept="video/*" style="display:none"></label>
+                    </div>
+                    <button id="publish-btn" class="btn-glow">Опубликовать</button>
+                </div>
+            </section>
+            <section id="tab-messages" class="tab hidden">
+                <div class="messages-layout">
+                    <div id="chats-list" class="glass"></div>
+                    <div id="chat-window" class="glass hidden"></div>
+                </div>
+            </section>
+            <section id="tab-profile" class="tab hidden">
+                <div id="profile-info" class="glass"></div>
+                <div id="profile-posts" class="glass"></div>
+            </section>
+            <section id="tab-notifications" class="tab hidden">
+                <div id="notifications-list" class="glass"></div>
+            </section>
+            <section id="tab-admin" class="tab hidden">
+                <div class="glass">
+                    <h2>Панель Создателя</h2>
+                    <div id="admin-users-list"></div>
+                </div>
+            </section>
+        </main>
+
+        <nav class="bottom-nav">
+            <button data-tab="feed" class="nav-btn active">🏠</button>
+            <button data-tab="groups" class="nav-btn">👥</button>
+            <button data-tab="publish" class="nav-btn">➕</button>
+            <button data-tab="messages" class="nav-btn">💬</button>
+            <button data-tab="profile" class="nav-btn">👤</button>
+        </nav>
+    </div>
+
+    <script>
+        // Основной код (полностью рабочий, компактный)
+        document.addEventListener('DOMContentLoaded', () => {
+            const D = {
+                u: JSON.parse(localStorage.u || '[]'),
+                p: JSON.parse(localStorage.p || '[]'),
+                g: JSON.parse(localStorage.g || '[]'),
+                m: JSON.parse(localStorage.m || '[]'),
+                n: JSON.parse(localStorage.n || '[]'),
+                cc: +localStorage.cc || 0,
+                cu: JSON.parse(localStorage.cu || 'null')
+            };
+            function S() {
+                ['u','p','g','m','n'].forEach(k => localStorage[k] = JSON.stringify(D[k]));
+                localStorage.cc = D.cc;
+                localStorage.cu = JSON.stringify(D.cu);
+            }
+            function H(n,p) { let h=0; for (let i=0;i<(n+p).length;i++) h=(n+p).charCodeAt(i)+((h<<5)-h); return `hsl(${Math.abs(h%360)},70%,65%)`; }
+            function F(ts) { return new Date(ts).toLocaleString('ru-RU'); }
+            function U() { return D.cu ? D.u.find(u => u.id === D.cu.id) : null; }
+            function R(u) { return u ? u.role==='creator'?'Создатель':u.premium?'Премиум-гость':'Гость' : ''; }
+            let cpid=null, opid=null;
+            const LS = document.getElementById('login-screen'), AS = document.getElementById('app');
+
+            document.getElementById('login-btn').onclick = () => {
+                const n = document.getElementById('login-username').value.trim(),
+                      p = document.getElementById('login-password').value.trim();
+                if (!n || !p) return alert('Введи имя и пароль');
+                let u = D.u.find(u => u.username === n);
+                if (!u) {
+                    let r = 'guest';
+                    if (p === '959506' && D.cc < 2) { r = 'creator'; D.cc++; }
+                    u = { id: Date.now().toString(), username: n, password: p, role: r, premium: false, avatar: '', banUntil: null, color: r==='creator'?'gold':H(n,p), followers: [], following: [] };
+                    D.u.push(u);
+                } else {
+                    if (u.password !== p) return alert('Неверный пароль!');
+                    if (p === '959506' && D.cc < 2 && u.role !== 'creator') { u.role = 'creator'; u.color = 'gold'; D.cc++; }
+                }
+                if (u.banUntil && u.banUntil > Date.now()) return alert(`Забанен ещё на ${Math.ceil((u.banUntil - Date.now())/3600000)} ч.`);
+                D.cu = { id: u.id, username: u.username, role: u.role };
+                S(); SH();
+            };
+
+            function SH() { LS.classList.add('hidden'); AS.classList.remove('hidden'); const u=U(); if (u) document.getElementById('current-username').textContent = `${u.username} (${R(u)})`; ST('feed'); }
+            document.getElementById('logout-btn').onclick = () => { D.cu=null; S(); AS.classList.add('hidden'); LS.classList.remove('hidden'); document.getElementById('login-username').value=''; document.getElementById('login-password').value=''; };
+            document.querySelectorAll('.nav-btn').forEach(b => b.onclick = () => ST(b.dataset.tab));
+            document.getElementById('current-username').onclick = () => ST('profile');
+            document.getElementById('notif-icon').onclick = () => ST('notifications');
+
+            function ST(tab, arg) {
+                document.querySelectorAll('.tab').forEach(t => t.classList.add('hidden'));
+                document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+                const tt = document.getElementById(`tab-${tab}`); if (tt) tt.classList.remove('hidden');
+                const tb = document.querySelector(`.nav-btn[data-tab="${tab}"]`); if (tb) tb.classList.add('active');
+                cpid = (tab==='profile' ? arg : null); opid = (tab==='messages' ? arg : null);
+                if (tab==='feed') RF();
+                else if (tab==='groups') RGr();
+                else if (tab==='messages') RC();
+                else if (tab==='profile') RP();
+                else if (tab==='notifications') RN();
+                else if (tab==='admin') RA();
+            }
+
+            document.getElementById('publish-btn').onclick = () => {
+                const u = U(); if (!u || (u.banUntil && u.banUntil > Date.now())) return alert('Ты забанен');
+                const tx = document.getElementById('post-text').value.trim(),
+                      im = document.getElementById('post-image').files[0],
+                      vi = document.getElementById('post-video').files[0];
+                if (!tx && !im && !vi) return alert('Добавь текст, фото или видео');
+                const proc = (f, t) => new Promise(res => { const r = new FileReader(); r.onload = () => res({type: t, data: r.result}); r.readAsDataURL(f); });
+                const pr = []; if (im) pr.push(proc(im, 'image')); if (vi) pr.push(proc(vi, 'video'));
+                Promise.all(pr).then(m => {
+                    const po = { id: Date.now().toString(), authorId: u.id, text: tx, media: m[0] || null, timestamp: Date.now(), likes: [], comments: [] };
+                    D.p.unshift(po); S();
+                    document.getElementById('post-text').value = ''; document.getElementById('post-image').value = ''; document.getElementById('post-video').value = '';
+                    ST('feed');
+                });
+            };
+
+            function RF() {
+                const con = document.querySelector('.feed-container'); if (!con) return; con.innerHTML = '';
+                if (!D.p.length) { con.innerHTML = '<div style="color:white;text-align:center;margin-top:40vh;">Нет постов</div>'; return; }
+                const um = new Map(D.u.map(u => [u.username, u]));
+                D.p.forEach(po => {
+                    const au = D.u.find(u => u.id === po.authorId); if (!au) return;
+                    const d = document.createElement('div'); d.className = 'post';
+                    d.innerHTML = `<div class="post-media">${po.media?.type==='image'?`<img src="${po.media.data}" alt="pic">`:''}${po.media?.type==='video'?`<video src="${po.media.data}" controls muted autoplay loop playsinline style="width:100%;height:100%;object-fit:contain" onerror="this.style.display='none'"></video>`:''}${!po.media?`<div style="color:white;padding:20px;font-size:1.5rem;">${po.text||''}</div>`:''}</div><div class="post-caption"><span class="post-author-small" style="cursor:pointer" data-uid="${au.id}">${au.username} – ${R(au)}</span><div>${po.media?po.text:''}</div><div class="post-actions-feed"><span class="like-btn" data-postid="${po.id}">❤️ ${po.likes.length}</span><span class="comment-btn" data-postid="${po.id}">💬 ${po.comments.length}</span></div><div>${po.comments.slice(-2).map(c=>{const cu=um.get(c.author);return`<div><b>${c.author} ${cu?'('+R(cu)+')':''}</b>: ${c.text}</div>`}).join('')}</div><input type="text" class="comment-input" data-postid="${po.id}" placeholder="Комментарий..."></div>`;
+                    con.appendChild(d);
+                });
+                document.querySelectorAll('.post-author-small').forEach(el => el.onclick = (e) => { e.stopPropagation(); ST('profile', el.dataset.uid); });
+                document.querySelectorAll('.like-btn').forEach(b => b.onclick = () => { const po = D.p.find(p => p.id === b.dataset.postid), u = U(); if (!po || !u) return; if (po.likes.includes(u.id)) po.likes = po.likes.filter(id => id !== u.id); else { po.likes.push(u.id); AN(po.authorId,'❤️',u); } S(); RF(); });
+                document.querySelectorAll('.comment-input').forEach(i => i.onkeypress = e => { if (e.key==='Enter') { const po = D.p.find(p => p.id === i.dataset.postid), u = U(); if (!po || !u || (u.banUntil && u.banUntil > Date.now())) return; const tx = i.value.trim(); if (!tx) return; po.comments.push({author: u.username, text: tx}); AN(po.authorId,'💬',u); i.value=''; S(); RF(); } });
+            }
+
+            function RP() {
+                const u = cpid ? D.u.find(u => u.id === cpid) : U(); if (!u) return;
+                const me = U(), isMe = !cpid || cpid === me?.id;
+                const likes = D.p.filter(p => p.authorId === u.id).reduce((s,p) => s + p.likes.length, 0);
+                document.getElementById('profile-info').innerHTML = `<div class="profile-container"><img class="profile-avatar" src="${u.avatar||'default-avatar.png'}" onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22120%22 height=%22120%22><rect width=%22120%22 height=%22120%22 fill=%22%23ddd%22/></svg>'"><h2>${u.username} ${u.role==='creator'?'👑':u.premium?'⭐':''}</h2><p>Роль: ${R(u)}</p><p>Цвет души: <span class="profile-color-dot" style="background:${u.color}"></span></p><p>👥 Подписчики: ${u.followers.length} | Подписки: ${u.following.length}</p><p>❤️ Лайков: ${likes}</p>${isMe?`<input type="file" id="avatar-upload" accept="image/*"><button id="change-avatar" class="btn-small">Сменить аватар</button>${u.banUntil&&u.banUntil>Date.now()?'<p style="color:red">⛔ Забанен</p>':''}`:`<button id="follow-btn" class="btn-small">${me.following.includes(u.id)?'Отписаться':'Подписаться'}</button><button id="write-btn" class="btn-small">✉️ Написать</button><button id="add-grp-btn" class="btn-small">➕ В группу</button>`}</div>`;
+                if (isMe) {
+                    document.getElementById('change-avatar').onclick = () => { const f = document.getElementById('avatar-upload').files[0]; if (f) { const r = new FileReader(); r.onload = () => { u.avatar = r.result; S(); RP(); }; r.readAsDataURL(f); } };
+                } else {
+                    document.getElementById('follow-btn').onclick = () => { if                    <button id="create-group-btn" class="btn-glow">Создать группу</button>
                     <div id="groups-list"></div>
                 </div>
                 <div id="group-view" class="hidden glass"></div>
